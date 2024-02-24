@@ -5,6 +5,8 @@ from q2poly import q2poly
 from helper_functions import *
 import typing
 
+import pprint
+
 def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], obstacles: typing.List[Polygon]) -> None:
     """ Plot the robot in the workspace.
 
@@ -17,7 +19,15 @@ def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], 
     obstacles : typing.List[Polygon]
         A list of polygons representing the obstacles
     """
-
+    
+    """
+    example robot
+    {'link1': [[-1.2, 0.5], [-1.2, -0.5], [2.3, -0.4], [2.3, 0.4], [-1.2, 0.5]],
+    'link2': [[-0.3, 0.4], [-0.3, -0.4], [2.7, -0.2], [2.7, 0.2], [-0.3, 0.4]],
+    'pivot1': [6.4, 2.5],
+    'pivot2': [2.1, 0]}
+    """
+    # pprint.pprint(robot)
     ### Insert your code below:
 
     # example of [0,0] configuration
