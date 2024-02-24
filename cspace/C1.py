@@ -27,20 +27,9 @@ def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], 
     'pivot1': [6.4, 2.5],
     'pivot2': [2.1, 0]}
     """
-    # pprint.pprint(robot)
     ### Insert your code below:
 
-    # example of [0,0] configuration
-    shape1 = [[5.2, 3  ],\
-              [5.2, 2  ],\
-              [8.7, 2.1],\
-              [8.7, 2.9]]
-    shape2 = [[ 8.2,  2.9],\
-              [ 8.2,  2.1],\
-              [11.2,  2.3],\
-              [11.2,  2.7]]
-    pivot1 =  [6.4, 2.5]
-    pivot2 =  [8.5, 2.5]
-
+    shape1, shape2, pivot1, pivot2 = q2poly(robot, q)
+    
     plot_obstacles_robot(obstacles=obstacles, link1=shape1, link2=shape2, origin1=pivot1, origin2=pivot2)
  
