@@ -1,6 +1,25 @@
 import numpy as np
 from shapely.geometry import Polygon as Polygon_shapely
 import typing
+from math import cos, sin
+
+
+def homo_2d_rot(theta):
+    return np.array([[cos(theta), -sin(theta), 0],
+                     [sin(theta), cos(theta), 0],
+                     [0, 0, 1]])
+
+def homo_2d_trans(translation):
+    assert(len(translation) == 2)
+
+    return np.array([[0, 0, translation[0]],
+                     [0, 0, translation[1]],
+                     [0, 0, 1]])
+
+def apply_transform(homo_trans, pos: typing.List[float]) -> np.array:
+    numpyed_pos = np.array(pos)
+    return np.array((homo_trans @ numpyed_pos)[:-1])
+
 
 def q2poly(robot: typing.Dict[str, typing.List[float]], q: typing.List[float]) -> typing.Tuple[np.array, np.array, np.array, np.array]:
     """ A function that takes in the robot's parameters and a configuration and 
@@ -29,12 +48,26 @@ def q2poly(robot: typing.Dict[str, typing.List[float]], q: typing.List[float]) -
     """
 
 
+    
     ### Insert your code below: ###
 
+    q_1_to_base, q_2_to_1 = q
 
-    shape1 = np.zeros((len(robot["link1"]),2))
-    shape2 = np.zeros((len(robot["link2"]),2))
-    pivot1 = np.zeros((2,))
-    pivot2 = np.zeros((2,))
+    first_link_homo_trans = homo_2d_trans([6.4,2.5]) @ homo_2d_rot(q_1_to_base)
+    second_link_homo_trans = first_link_homo_trans @ homo_2d_rot(q_2_to_1)
+
+    # for some goddamnit reason the first vertix is "looped"
+    robot_link1_vertices = robot["link1"][:-1]
+    shape1 = np.array([apply_transform(first_link_homo_trans, vertex) for vertex in robot_link1_vertices])
+
+    robot_link2_vertices = robot["link2"][:-1]
+    shape2 = np.array([apply_transform(second_link_homo_trans, vertex) for vertex in robot_link2_vertices])
+
+    pivot1 = np.array(apply_transform(first_link_homo_trans, [0, 0]))
+    pivot2 = np.array(apply_transform(second_link_homo_trans, [0, 0]))
+    # shape1 = np.zeros((len(robot["link1"]),2))
+    # shape2 = np.zeros((len(robot["link2"]),2))
+    # pivot1 = np.zeros((2,))
+    # pivot2 = np.zeros((2,))
 
     return shape1, shape2, pivot1, pivot2
