@@ -10,14 +10,6 @@ import typing
 def polygon_intersects_any_in_lst(poly, poly_list):
     return any(intersects(poly, other_poly) for other_poly in poly_list)
 
-def bool_to_num(b):
-    if b == True:
-        return 1
-    elif b == False:
-        return 0
-    
-    assert False
-
 def C2_func(robot: typing.Dict[str, typing.List[float]], cspace: np.array, obstacles: typing.List[Polygon],q_grid: np.array) -> np.array:
     """Create the configuration space for the robot with the given obstacles in the given empty cspace array.
 
