@@ -10,6 +10,15 @@ import typing
 def polygon_intersects_any_in_lst(poly, poly_list):
     return any(intersects(poly, other_poly) for other_poly in poly_list)
 
+def collision_bool_to_num(b):
+    # fucking weird, feels like should be reversed?
+    if b == True:
+        return 1
+    elif b == False:
+        return 0
+
+    assert False
+
 def C2_func(robot: typing.Dict[str, typing.List[float]], cspace: np.array, obstacles: typing.List[Polygon],q_grid: np.array) -> np.array:
     """Create the configuration space for the robot with the given obstacles in the given empty cspace array.
 
@@ -43,6 +52,10 @@ def C2_func(robot: typing.Dict[str, typing.List[float]], cspace: np.array, obsta
             link_shape_1, link_shape_2, _, _ = q2poly(robot, [angle1, angle2])
             robot_poly = union(Polygon_shapely(link_shape_1), Polygon_shapely(link_shape_2))
 
-            result[i,j] = polygon_intersects_any_in_lst(robot_poly, obstacles)
+            elem_result = collision_bool_to_num(polygon_intersects_any_in_lst(robot_poly, obstacles))
+            # print(f"{i} {j}: {elem_result}")
+            result[i,j] = elem_result
 
+    # np.set_printoptions(threshold=np.inf)
+    # print(result)
     return result

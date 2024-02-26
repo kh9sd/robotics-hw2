@@ -5,7 +5,6 @@ from q2poly import q2poly
 from helper_functions import *
 import typing
 
-import pprint
 
 def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], obstacles: typing.List[Polygon]) -> None:
     """ Plot the robot in the workspace.
@@ -28,7 +27,6 @@ def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], 
     'pivot2': [2.1, 0]}
     """
     ### Insert your code below:
-
     shape1, shape2, pivot1, pivot2 = q2poly(robot, q)
     
     plot_obstacles_robot(obstacles=obstacles, link1=shape1, link2=shape2, origin1=pivot1, origin2=pivot2)
