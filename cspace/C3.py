@@ -36,15 +36,7 @@ def waveform_planner(cspace: np.array, q_grid: np.array, q_goal):
     assert(distances.ndim == 2)
     x, y = distances.shape
 
-
-    # set obstacle points to val of 1
-    for i in range(x):
-        for j in range(y):
-            # element in cspace is 1 if in collision, 0 if not
-            if (math.isclose(cspace[i,j], 1, rel_tol=1e-5)):
-                # print([q_grid[i], q_grid[j]])
-                distances[i,j] = 1
-    
+    # element in cspace is 1 if in collision, 0 if not
 
     """
     1. L={goal state}, d(goal state) = 2, d(obstacle
@@ -57,29 +49,25 @@ def waveform_planner(cspace: np.array, q_grid: np.array, q_goal):
     """
 
     goal_coordinates = get_closest_goal_coords(q_grid, q_goal)
-    print(goal_coordinates)
     todo_lst = deque()
     todo_lst.append(goal_coordinates)
     distances[goal_coordinates[0], goal_coordinates[1]] = 2
 
     while todo_lst:
         cur_coords = todo_lst.popleft()
-        # print(cur_coords)
         cur_x, cur_y = cur_coords
 
-        # print(distances[cur_x, cur_y])
-
-        neighbor_coords = filter_out_neighbors(distances.shape, [#[cur_x - 1, cur_y-1],
+        neighbor_coords = filter_out_neighbors(distances.shape, [[cur_x - 1, cur_y-1],
                                                                 [cur_x - 1, cur_y],
-                                                                #[cur_x - 1, cur_y+1],
+                                                                [cur_x - 1, cur_y+1],
 
                                                                 [cur_x, cur_y-1],
                                                                 # [cur_x, cur_y],
                                                                 [cur_x, cur_y+1],
 
-                                                                #[cur_x + 1, cur_y-1],
+                                                                [cur_x + 1, cur_y-1],
                                                                 [cur_x + 1, cur_y],
-                                                                #[cur_x + 1, cur_y+1]
+                                                                [cur_x + 1, cur_y+1]
                                                                 ])
         
         for neigh_x, neigh_y in neighbor_coords:
@@ -92,9 +80,9 @@ def waveform_planner(cspace: np.array, q_grid: np.array, q_goal):
     # cleanup and set rest of untouched distances to 0
     for i in range(x):
         for j in range(y):
-            # element in cspace is 1 if in collision, 0 if not
+            # element in distances is 1 if in collision, 0 if not
+            # so 0 if untouched
             if (math.isclose(distances[i,j], 0, rel_tol=1e-5)):
-                # print([q_grid[i], q_grid[j]])
                 distances[i,j] = 1
 
     return distances
