@@ -34,17 +34,18 @@ def C4_func(distances: np.array,q_grid: np.array, q_start: np.array) -> typing.L
     result_path = [np.array([cur_x, cur_y])]
 
     while not math.isclose(distances[cur_x, cur_y], 2):
-        neighbor_candidates =  [[cur_x - 1, cur_y-1],
-                                [cur_x - 1, cur_y],
-                                [cur_x - 1, cur_y+1],
+        neighbor_candidates =  C3.filter_out_neighbors(distances.shape, 
+                                                       [[cur_x - 1, cur_y-1],
+                                                        [cur_x - 1, cur_y],
+                                                        [cur_x - 1, cur_y+1],
 
-                                [cur_x, cur_y-1],
-                                # [cur_x, cur_y],
-                                [cur_x, cur_y+1],
+                                                        [cur_x, cur_y-1],
+                                                        # [cur_x, cur_y],
+                                                        [cur_x, cur_y+1],
 
-                                [cur_x + 1, cur_y-1],
-                                [cur_x + 1, cur_y],
-                                [cur_x + 1, cur_y+1]]
+                                                        [cur_x + 1, cur_y-1],
+                                                        [cur_x + 1, cur_y],
+                                                        [cur_x + 1, cur_y+1]])
         
         closest_neighbor = sorted([neighbor for neighbor in neighbor_candidates 
                             if not math.isclose(distances[neighbor[0],
