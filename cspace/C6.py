@@ -34,4 +34,26 @@ def C6_func(robot: typing.Dict[str, typing.List[float]], q_path: typing.List[np.
 
     ### Insert your code below: ###
     num_collisions = 0
+
+    obstacle_shape = shapely.union_all(list(map(Polygon_shapely, obstacles)))
+
+    path_iter = iter(q_path)
+
+    try:
+        from_config = next(path_iter)
+        while(True):
+            to_config = next(path_iter)
+
+            from_shape1, from_shape2, _, _ = q2poly(robot, from_config)
+            to_shape1, to_shape2, _, _ = q2poly(robot, to_config)
+
+            hull = shapely.convex_hull(MultiPoint([*from_shape1, *from_shape2, *to_shape1, *to_shape2]))
+
+            if (hull.intersects(obstacle_shape)):
+                num_collisions += 1
+
+            from_config = to_config
+    except StopIteration:
+        pass
+
     return num_collisions
