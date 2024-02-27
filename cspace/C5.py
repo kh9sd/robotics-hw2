@@ -28,6 +28,4 @@ def C5_func(q_grid: np.array, q_start: np.array, q_goal:np.array, c_path: typing
     """
 
     ### Insert your code below: ###
-    bruh = [np.array([q_grid[config_cspace[0]], q_grid[config_cspace[1]]]) for config_cspace in c_path]
-    print(bruh)
-    return bruh
+    return [np.array([q_grid[config_cspace[0]], q_grid[config_cspace[1]]]) for config_cspace in c_path]
