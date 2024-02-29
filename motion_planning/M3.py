@@ -3,8 +3,12 @@ import numpy as np
 from robot import Simple_Manipulator as Robot
 import typing
 
+import math
+from collections import defaultdict
+import heapq
 
-def M3(robot: Robot, samples: np.array, G: Graph, q_start: np.array, q_goal: np.array) -> typing.Tuple[np.array, bool]:
+
+def M3(robot: Robot, samples: np.array, graph: Graph, q_start: np.array, q_goal: np.array) -> typing.Tuple[np.array, bool]:
     """ Find a path from q_start to q_goal using the PRM roadmap
 
     Parameters
@@ -31,9 +35,41 @@ def M3(robot: Robot, samples: np.array, G: Graph, q_start: np.array, q_goal: np.
         bool:
             Boolean denoting whether a path was found
     """
+    distances = defaultdict(lambda : math.inf)
+    prev = {}
 
+    # link up start and goal
+    for sample in [list(q_start), list(q_goal)]:
+        for other_sample in samples: 
+            # Returns True, if edge is collision free
+            if robot.check_edge(sample, other_sample):
+                graph.add_edge(tuple(sample), tuple(other_sample), weight=math.dist(other_sample, sample))
+    
+    distances[tuple(q_start)] = 0
+    todo_queue = [(0, tuple(q_start))]
 
-    #student code start here
-    raise NotImplementedError
+    while todo_queue:
+        cur_d, cur_node = heapq.heappop(todo_queue)
 
-    return path, path_found
+        for neighbor, datadict in graph.adj[cur_node].items():
+            candidate_dist = cur_d + datadict["weight"]
+
+            if candidate_dist < distances[neighbor]:
+                distances[neighbor] = candidate_dist
+                prev[neighbor] = cur_node
+                heapq.heappush(todo_queue, (candidate_dist, neighbor))
+
+    if prev.get(tuple(q_goal)) is None:
+        return np.zeros((1,4)), False
+    
+    cur_node = tuple(q_goal)
+    path_lst = []
+
+    while(cur_node is not None):
+        path_lst.append(cur_node)
+        cur_node = prev.get(cur_node)
+    
+    path_lst.reverse()
+
+    return np.array(path_lst), True
+
