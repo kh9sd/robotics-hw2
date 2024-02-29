@@ -62,4 +62,4 @@ def C7_func(cspace: np.array) -> np.array:
     ### Insert your code below: ###
     
     padded_cspace = pad_by_1_helper(cspace)
-    return padded_cspace
+    return pad_by_1_helper(padded_cspace)
