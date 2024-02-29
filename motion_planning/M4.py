@@ -68,9 +68,8 @@ def M4(robot: Robot, q_start: np.array, q_goal: np.array) -> typing.Tuple[np.arr
         if robot.check_edge(np.array(closest_vertex), np.array(next_config)):
             graph.add_edge(closest_vertex, next_config)
 
-    path = networkx.shortest_path(graph, tuple(q_start), tuple(q_goal))
-
-    if not path:
-        return np.zeros((1,4)), False
-    else:
+    try:
+        path = networkx.shortest_path(graph, tuple(q_start), tuple(q_goal))
         return np.array(path), True
+    except networkx.exception.NodeNotFound:
+        return np.zeros((1,4)), False
