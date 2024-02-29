@@ -18,8 +18,21 @@ def M5(robot: Robot, path: np.array) -> np.array:
         input path, where some unnecessary intermediate
         waypoints may have been removed
     """
-
+    config_lst = list(path)
+    result_lst = []
     #student work start here
-    raise NotImplementedError
+    
+    result_lst.append(config_lst[-1])
+    cur_ending_config_idx = len(config_lst) -1
 
-    return path
+    while cur_ending_config_idx != 0:
+        cur_ending_config = config_lst[cur_ending_config_idx]
+        for i, config in enumerate(config_lst):
+
+            if robot.check_edge(config, cur_ending_config):
+                result_lst.append(config)
+                cur_ending_config_idx = i
+                break
+
+    result_lst.reverse()
+    return np.array(result_lst)
