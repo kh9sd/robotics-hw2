@@ -10,8 +10,7 @@ from shapely import MultiPoint
 import typing
 
 from C1 import C1_func
-
-
+import C2
 
 
 def C6_func(robot: typing.Dict[str, typing.List[float]], q_path: typing.List[np.array], obstacles: typing.List[Polygon]) -> int:
@@ -35,7 +34,7 @@ def C6_func(robot: typing.Dict[str, typing.List[float]], q_path: typing.List[np.
     ### Insert your code below: ###
     num_collisions = 0
 
-    obstacle_shape = shapely.union_all(list(map(Polygon_shapely, obstacles)))
+    obstacle_shapes = list(map(Polygon_shapely, obstacles))
 
     path_iter = iter(q_path)
 
@@ -49,7 +48,7 @@ def C6_func(robot: typing.Dict[str, typing.List[float]], q_path: typing.List[np.
 
             hull = shapely.convex_hull(MultiPoint([*from_shape1, *from_shape2, *to_shape1, *to_shape2]))
 
-            if (hull.intersects(obstacle_shape)):
+            if C2.polygon_intersects_any_in_lst(hull, obstacle_shapes):
                 num_collisions += 1
 
             from_config = to_config
