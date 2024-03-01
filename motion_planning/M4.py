@@ -55,7 +55,7 @@ def M4(robot: Robot, q_start: np.array, q_goal: np.array) -> typing.Tuple[np.arr
             Boolean denoting whether a path was found
     """
 
-    MAX_ITERATIONS = 500
+    MAX_ITERATIONS = 1000
     MAX_STEP_SIZE = 1
     graph = Graph()
     graph.add_node(tuple(q_start))
